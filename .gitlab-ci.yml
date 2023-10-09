@@ -1,0 +1,89 @@
+# ---
+# stages:
+#   - allure-start
+#   - all
+#   - moderators
+#   - allure-stop
+#
+# variables:
+#   ALLURE_LAUNCH_NAME: "${CI_PROJECT_NAME} - ${CI_COMMIT_SHORT_SHA}"
+#   ALLURE_LAUNCH_TAGS: "regular, ${CI_COMMIT_REF_NAME}, ${GITLAB_USER_EMAIL}"
+#   ALLURE_TESTPLAN_PATH: ./testplan.json
+#   ALLURE_RESULTS: ./allure-results
+#
+
+
+##############################################################
+##############################################################
+# Тут используем настройк из доки ТестОпс для работы со сценариями через ТестОпс
+# позволяет управлять тестами и тестпланами прям из ТестОпс
+# allure-start:
+#   stage: allure-start
+#   image: nestandarta/git_python3.8_ubuntu
+#   before_script:
+#     - rm -R api
+#     - git submodule update --recursive --remote
+#     - python3 -m pip install --upgrade pip
+#     - pip install -r requirements.txt
+#   script:
+#     - chmod +x ./allurectl
+#     - ./allurectl job-run start --launch-name "${CI_PROJECT_NAME}" || true
+#     - ./allurectl job-run start
+#     - ./allurectl job-run plan --output-file ${ALLURE_TESTPLAN_PATH}
+#     - ./allurectl watch 'pytest'
+#   after_script:
+#     - echo 'Tests finish'
+#   rules:
+#     - if: $CI_PIPELINE_SOURCE != "push"
+
+
+
+##############################################################
+##############################################################
+# Вынес базовые команды для всех тестов
+# результаты грузятся после каждой джобы
+# .tests:
+#   image: nestandarta/git_python3.8_ubuntu
+#   allow_failure: true
+#   before_script:
+#     - rm -R api
+#     - git submodule update --recursive --remote
+#     - python3 -m pip install --upgrade pip
+#     - pip install -r requirements.txt
+#   artifacts:
+#     paths:
+#       - allure-results/
+#     when: always
+#     expire_in: 1 day
+#   rules:
+#     - if: $CI_PIPELINE_SOURCE != "push"
+#   after_script:
+#     - chmod +x ./allurectl
+#     - ./allurectl upload ./allure-results
+
+    
+# Закоменченый вариант запуска тестов с выгрузкой отчета на тестОпс 
+#  в котором можно вручную настроить запуск тестов 
+# НЕ позволяет управлять тестами и тест-планами из ТестОпс, запускаться 
+# будут всегда только явно прописанные в этом файле тесты и пути к дирректориям
+# moderators:
+#   stage: moderators
+#   extends: .tests
+#   script:
+#     - pytest tests/moderators/
+#
+# conference:
+#   stage: all
+#   extends: .tests
+#   script:
+#     - pytest tests/all/conference/
+#       
+# # -------------- остановка работы allure
+# allure-stop:
+#   stage: allure-stop
+#   image: nestandarta/git_python3.8_ubuntu
+#   script:
+#     - chmod +x ./allurectl
+#     - ./allurectl job-run stop --project-id ${ALLURE_PROJECT_ID} ${ALLURE_JOB_RUN_ID} || true
+#   rules:
+#     - if: $CI_PIPELINE_SOURCE != "push"
