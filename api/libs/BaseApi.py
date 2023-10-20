@@ -8,7 +8,7 @@ from . import TestData
 class BaseApi:
     token = refresher_token = ''
     current_connections = 0
-    headers = ''
+    headers:dict = {}
     second_ip_server = ''
     server_ip = ''
     fake_token = fake_refresher_token = ''
@@ -21,46 +21,44 @@ class BaseApi:
         self.auth_jwt(server_ip, logins, passwords, fake_token)
 
     @step('Выполнить {method} запрос: {url}')
-    def api_test(self, method: str, url: str, **data):
-        response = None
+    def api_test(self, method: str, url: str, **data) -> requests.Response:
         if 'GET' in method:
-            response = requests.get(url=f'https://{self.server_ip}/{url}', params=data, verify=False,
+            return requests.get(url=f'https://{self.server_ip}/{url}', params=data, verify=False,
                                     headers=self.headers)
         if 'POST' in method:
-            response = requests.post(url=f'https://{self.server_ip}/{url}', data=json.dumps(data), verify=False,
+            return requests.post(url=f'https://{self.server_ip}/{url}', data=json.dumps(data), verify=False,
                                      headers=self.headers)
         if 'PATCH' in method:
-            response = requests.patch(url=f'https://{self.server_ip}/{url}', data=json.dumps(data), verify=False,
+            return requests.patch(url=f'https://{self.server_ip}/{url}', data=json.dumps(data), verify=False,
                                       headers=self.headers)
         if 'DELETE' in method:
-            response = requests.delete(url=f'https://{self.server_ip}/{url}', data=json.dumps(data), verify=False,
+            return requests.delete(url=f'https://{self.server_ip}/{url}', data=json.dumps(data), verify=False,
                                        headers=self.headers)
         if 'PUT' in method:
-            response = requests.put(url=f'https://{self.server_ip}/{url}', data=json.dumps(data), verify=False,
+            return requests.put(url=f'https://{self.server_ip}/{url}', data=json.dumps(data), verify=False,
                                     headers=self.headers)
         time.sleep(self.sleep)
-        return response
+        return exit(1)
 
     @step('Выполнить {method} запрос: {url}')
-    def call_method(self, method: str, url: str, data):
-        response = None
+    def call_method(self, method: str, url: str, data) -> requests.Response:
         if 'GET' in method:
-            response = requests.get(url=f'https://{self.server_ip}/{url}', params=data, verify=False,
+            return  requests.get(url=f'https://{self.server_ip}/{url}', params=data, verify=False,
                                     headers=self.headers)
         if 'POST' in method:
-            response = requests.post(url=f'https://{self.server_ip}/{url}', data=json.dumps(data), verify=False,
+            return requests.post(url=f'https://{self.server_ip}/{url}', data=json.dumps(data), verify=False,
                                      headers=self.headers)
         if 'PATCH' in method:
-            response = requests.patch(url=f'https://{self.server_ip}/{url}', data=json.dumps(data), verify=False,
+            return requests.patch(url=f'https://{self.server_ip}/{url}', data=json.dumps(data), verify=False,
                                       headers=self.headers)
         if 'DELETE' in method:
-            response = requests.delete(url=f'https://{self.server_ip}/{url}', data=json.dumps(data), verify=False,
+            return requests.delete(url=f'https://{self.server_ip}/{url}', data=json.dumps(data), verify=False,
                                        headers=self.headers)
         if 'PUT' in method:
-            response = requests.put(url=f'https://{self.server_ip}/{url}', data=json.dumps(data), verify=False,
+            return requests.put(url=f'https://{self.server_ip}/{url}', data=json.dumps(data), verify=False,
                                     headers=self.headers)
         time.sleep(self.sleep)
-        return response
+        return exit(1)
 
     def auth_jwt(self, server_ip, logins='', passwords='', fake_token=False):
         url = f'https://{server_ip}/api/v1/auth/jwt'

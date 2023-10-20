@@ -12,29 +12,29 @@ from PIL import Image
 
 class ConferencesApi(BaseApi):
 
-    def create_conference(self, delay=0, **data):
+    def create_conference(self, delay=0, **data) -> requests.Response:
         """Метод создает конференцию, на вход принимаются настройки конференции"""
         response = self.call_method('POST', 'api/v1/conferences', data)
         time.sleep(delay)
         return response
 
-    def delete_conference(self, number):
+    def delete_conference(self, number) -> requests.Response:
         """Метод удаляет конференцию с сервера по ее номеру"""
         return self.call_method('DELETE', f'api/v1/conference/{number}', data=None)
 
-    def delete_conferences(self, **numbers):
+    def delete_conferences(self, **numbers) -> requests.Response:
         """"Метод удаляет список конференций с сервера по номерам"""
         return self.call_method('POST', 'api/v1/delete_conferences', numbers)
 
-    def get_conferences_list(self, **params):
+    def get_conferences_list(self, **params) -> requests.Response:
         """Метод возвращается все конференции с параметрами предусмотренными api сервера"""
         return self.call_method('GET', 'api/v1/conferences', params)
 
-    def start_conference(self, conference):
+    def start_conference(self, conference) -> requests.Response:
         """Метод включает конференцию"""
         return self.call_method('POST', 'api/v1/start_conference', data={'conference': conference})
 
-    def stop_conference(self, conference):
+    def stop_conference(self, conference) -> requests.Response:
         """Останавливаем конференцию"""
         return self.call_method('POST', 'api/v1/stop_conference', data={'conference': conference})
 

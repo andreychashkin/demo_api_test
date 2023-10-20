@@ -1,22 +1,6 @@
 import os
 
 
-ip_server = '' if os.environ.get('SERVER_IP') is None else os.environ.get('SERVER_IP')
-login = '' if os.environ.get('LOGIN') is None else os.environ.get('LOGIN')
-password = '' if os.environ.get('PASSWORD') is None else os.environ.get('PASSWORD')
-
-second_ip = '' if os.environ.get('SECOND_IP') is None else os.environ.get('SECOND_IP')
-second_login = '' if os.environ.get('SECOND_LOGIN') is None else os.environ.get('SECOND_LOGIN')
-second_password = '' if os.environ.get('SECOND_PASSWORD') is None else os.environ.get('SECOND_PASSWORD')
-
-call_ip = '' if os.environ.get('CALL_IP') is None else os.environ.get('CALL_IP')
-ip_call_number = '' if os.environ.get('IP_CALL_NUMBER') is None else os.environ.get('IP_CALL_NUMBER')
-sleep = 0.3 if os.environ.get('IP_CALL_NUMBER') is None else float(os.environ.get('SLEEP'))
-
-terminal_ip = '' if os.environ.get('TERMINAL_IP') is None else os.environ.get('TERMINAL_IP')
-
-screenshots = 'new' if os.environ.get('SCREENSHOTS') is None else os.environ.get('SCREENSHOTS')
-
 class AllDatas:
     playerTitles = ['video1', 'video2', 'video3', 'video4', 'video5', 'video6', 'video7', 'video8', 'video9',
                     'black1', 'black2', 'sinxra']
@@ -46,4 +30,26 @@ class AllDatas:
                     '3v4': '3', '2p8': '14', '2ptop8': '24',
                     '8v2': '26', '2v18': '28', '2v17': '35',
                     '2v4v15v4v1': '40', '1v11': '27'}
+    
+    @staticmethod
+    def set_env_variable(key: str, default_value: str) -> str:
+        if not(os.environ.get(key) is None):
+            return str(os.environ.get(key))
+        else:
+            return default_value 
 
+
+ip_server = AllDatas.set_env_variable(key='SERVER_IP', default_value='10.1.0.11')
+login = AllDatas.set_env_variable(key='LOGIN',default_value='admin')
+password = AllDatas.set_env_variable(key='PASSWORD',default_value='123456')
+
+second_ip = AllDatas.set_env_variable(key='SECOND_IP',default_value='10.1.0.13')
+second_login = AllDatas.set_env_variable(key='SECOND_LOGIN',default_value='10.1.0.13')
+second_password = AllDatas.set_env_variable(key='SECOND_PASSWORD', default_value='123456')
+
+call_ip = AllDatas.set_env_variable(key='CALL_IP', default_value='10.1.0.117:4567')
+ip_call_number = AllDatas.set_env_variable(key='IP_CALL_NUMBER', default_value='10.23.9.59')
+sleep = 0.3 
+
+screenshots = AllDatas.set_env_variable(key='SCREENSHOTS', default_value='new')
+ui_browser = AllDatas.set_env_variable(key='UI_BROWSER', default_value='local')
